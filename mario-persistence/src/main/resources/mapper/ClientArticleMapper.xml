@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.discover.persistence.dao.mysql.ClientArticleMapper">
+
+    <select id="queryArticleList" resultType="com.mall.discover.persistence.bo.ArticleBO">
+        SELECT
+        da.article_id,
+        da.article_content,
+        da.article_look,
+        da.article_title,
+        dc.read_count,
+        dc.sort
+        FROM
+        discover_article AS da
+        INNER JOIN discover_count AS dc ON da.article_id = dc.bizId
+        <where>
+            da.is_deleted = 0
+            AND dc.is_deleted = 0
+            AND da.article_status = 2
+            AND dc.biztype = #{param.bizType}
+            <if test="param.lookTypeList != null and param.lookTypeList.size > 0">
+                AND da.article_look_type in
+                <foreach collection="param.lookTypeList" open="(" close=")" separator="," item="item">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        order by dc.sort ASC,dc.sort_client desc
+        LIMIT #{startRecord},#{recordSize}
+    </select>
+
+    <select id="queryArticleListCount" resultType="java.lang.Integer">
+        SELECT
+        count(da.article_id)
+        FROM
+        discover_article AS da
+        INNER JOIN discover_count AS dc ON da.article_id = dc.bizId
+        <where>
+            da.is_deleted = 0
+            AND dc.is_deleted = 0
+            AND da.article_status = 2
+            AND dc.biztype = #{param.bizType}
+            <if test="param.lookTypeList != null and param.lookTypeList.size > 0">
+                AND da.article_look_type in
+                <foreach collection="param.lookTypeList" open="(" close=")" separator="," item="item">
+                 #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="queryArticleInfo" resultType="com.mall.discover.persistence.bo.ArticleBO">
+        SELECT
+        da.article_id,da.article_content,da.article_look,
+        dc.read_count,dc.sort,da.article_title
+        FROM
+        discover_article AS da
+        INNER JOIN discover_count AS dc ON da.article_id = dc.bizId
+        <where>
+            da.is_deleted = 0
+            AND dc.is_deleted = 0
+            AND da.article_status = 2
+            AND dc.biztype = #{param.bizType}
+            AND da.article_id = #{param.articleId}
+        </where>
+        LIMIT 1
+    </select>
+
+    <select id="queryArticleSubjectPage" resultType="com.mall.discover.persistence.bo.SubjectBO">
+        SELECT
+            ds.subject_id,
+            ds.subject_name
+        FROM
+            discover_relation AS dr
+            INNER JOIN discover_subject AS ds ON ds.subject_id = dr.from_id
+        WHERE
+            dr.is_deleted = 0
+            AND ds.is_deleted = 0
+            AND dr.biztype = #{param.relation}
+            AND dr.to_id = #{param.articleId}
+    </select>
+
+    <select id="queryArticleProductPage" resultType="com.mall.discover.persistence.bo.ProductBO">
+        SELECT
+            dp.product_id,
+            dp.product_no,
+            dp.product_category,
+            dp.product_name,
+            dp.mall_count,
+            dp.commission,
+            dp.price,
+            dp.master_img
+        FROM
+            discover_relation AS dr
+            INNER JOIN discover_product AS dp ON dp.product_id = dr.from_id
+        WHERE
+            dr.is_deleted = 0
+            AND dp.is_deleted = 0
+            AND dr.biztype = #{param.relation}
+            AND dr.to_id = #{param.articleId}
+    </select>
+
+    <select id="queryAllArticleId" resultType="java.lang.Long">
+        select article_id from discover_article
+        where is_deleted = 0
+        and article_status = 2
+    </select>
+
+    <select id="queryAllArticleList" resultType="com.mall.discover.persistence.bo.ArticleBO">
+        select article_id,article_look from discover_article
+    </select>
+
+    <update id="batchUpdateArticleLookType">
+        <foreach collection="param" item="item" separator=";">
+            update discover_article
+            set article_look_type = #{item.articleLookType}
+            where article_id = #{item.articleId}
+        </foreach>
+    </update>
+</mapper>

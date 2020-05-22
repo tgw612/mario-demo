@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.mario.mario-parent</groupId>
+    <artifactId>mario-parent</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+  </parent>
+
+  <groupId>com.mario</groupId>
+  <artifactId>mario-demo</artifactId>
+  <packaging>pom</packaging>
+  <version>1.0.1-SNAPSHOT</version>
+  <modules>
+    <module>mario-common</module>
+    <module>mario-task</module>
+    <module>mario-persistence</module>
+    <module>mario-service</module>
+    <module>mario-service-api</module>
+    <module>mario-mq</module>
+    <module>mario-web</module>
+    <module>mario-admin-web</module>
+  </modules>
+
+  <properties>
+    <!-- 公共包 -->
+    <sibu-mall-common.version>1.0.0.72.sibu</sibu-mall-common.version>
+    <!--商品服务-->
+    <sibu-mall-product-service-api.version>1.0.0.6.sibu</sibu-mall-product-service-api.version>
+    <!--佣金服务-->
+    <sibu-mall-commission-service-api.version>1.0.0.23.sibu
+    </sibu-mall-commission-service-api.version>
+    <!--用户服务-->
+    <sibu-mall-user.version>1.0.1.56.sibu</sibu-mall-user.version>
+    <!-- token验证版本号 -->
+    <sibu-mall-token-configure.version>1.0.0.4.sibu</sibu-mall-token-configure.version>
+    <sibu-mall-token-service-api.version>1.0.0.4.sibu</sibu-mall-token-service-api.version>
+    <!-- ElasticSearch微服务 -->
+    <sibu-mall-elasticsearch-service-api.version>1.0.1.20.sibu
+    </sibu-mall-elasticsearch-service-api.version>
+
+
+    <spring.version>5.1.3.RELEASE</spring.version>
+    <spring-boot.version>2.1.1.RELEASE</spring-boot.version>
+    <doubo-parent.version>2.0.20M63</doubo-parent.version>
+    <dubbo.version>2.7.1</dubbo.version>
+
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <java.version>1.8</java.version>
+
+    <spring.boot.main.class>com.mall.discover.Application</spring.boot.main.class>
+    <spring.boot.web.main.class>com.mall.discover.web.WebApplication</spring.boot.web.main.class>
+
+    <docker.repostory>docker.mall.vip</docker.repostory>
+    <docker.image.prefix>sibu-mall</docker.image.prefix>
+
+    <!-- 官方文档：https://github.com/alibaba/druid/wiki/%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98 -->
+    <druid.version>1.1.10</druid.version>
+
+    <mybatis-spring-boot-starter.version>1.3.2</mybatis-spring-boot-starter.version>
+    <com.baomidou.mybatis-plus-boot-starter.version>2.3.2
+    </com.baomidou.mybatis-plus-boot-starter.version>
+    <mybatis.version>3.4.6</mybatis.version>
+    <mybatis-spring.version>1.3.2</mybatis-spring.version>
+    <mybatis-generator-core.version>1.3.2</mybatis-generator-core.version>
+    <mybatis-redis-cache.version>1.0.0-beta2</mybatis-redis-cache.version>
+    <redisson-version>3.6.4</redisson-version>
+    <commons-collections.version>3.2.2</commons-collections.version>
+    <commons-logging.version>1.1.3</commons-logging.version>
+    <commons-lang3.version>3.1</commons-lang3.version>
+    <commons.io.version>2.5</commons.io.version>
+    <commons.fileupload.version>1.3.1</commons.fileupload.version>
+    <slf4j.version>1.7.24</slf4j.version>
+    <log4j.over.slf4j.version>1.7.24</log4j.over.slf4j.version>
+    <logback.version>1.1.11</logback.version>
+    <mockito.version>1.10.19</mockito.version>
+    <guava.version>23.0</guava.version>
+    <lombok.version>1.16.22</lombok.version>
+    <mysql.version>5.1.47</mysql.version>
+    <mongo.version>2.1.0.RELEASE</mongo.version>
+    <proxtool.version>0.9.1</proxtool.version>
+    <proxool-cglib.version>1.0</proxool-cglib.version>
+    <cglib.version>3.2.5</cglib.version>
+    <cglib-nodep.version>3.2.5</cglib-nodep.version>
+    <asm.version>5.1</asm.version>
+    <joda.time.version>2.3</joda.time.version>
+    <javax.validation.version>2.0.1.Final</javax.validation.version>
+    <hibernate.validator.version>6.0.13.Final</hibernate.validator.version>
+
+    <javax.servlet.api.version>3.1.0</javax.servlet.api.version>
+    <javax.servlet.jsp.version>2.3.1</javax.servlet.jsp.version>
+    <jstl.version>1.2</jstl.version>
+
+    <junit.version>4.12</junit.version>
+    <testng.version>6.9.10</testng.version>
+    <jcaptcha-all.version>1.0-RC4</jcaptcha-all.version>
+
+    <redis.version>2.9.0</redis.version>
+
+    <autoconfig-plugin.version>1.2</autoconfig-plugin.version>
+
+    <maven.compiler.plugin.version>3.1</maven.compiler.plugin.version>
+    <maven.surefire.plugin.version>2.17</maven.surefire.plugin.version>
+    <maven.jar.plugin.version>2.6</maven.jar.plugin.version>
+    <maven.source.plugin.version>2.2.1</maven.source.plugin.version>
+    <maven.install.plugin.version>2.5.2</maven.install.plugin.version>
+    <maven.clean.plugin.version>2.5</maven.clean.plugin.version>
+    <maven.resources.plugin.version>2.6</maven.resources.plugin.version>
+    <maven.deploy.plugin.version>2.7</maven.deploy.plugin.version>
+    <maven.site.plugin.version>3.3</maven.site.plugin.version>
+    <maven.war.plugin.version>2.4</maven.war.plugin.version>
+    <dockerfile.maven.version>1.4.0</dockerfile.maven.version>
+    <git.commit.id.plugin.version>2.2.4</git.commit.id.plugin.version>
+
+    <aliyun.oss.version>2.5.0</aliyun.oss.version>
+
+    <bcprov.jdk15on.version>1.54</bcprov.jdk15on.version>
+
+    <httpclient.version>4.5.3</httpclient.version>
+
+    <apollo.version>1.0.0</apollo.version>
+    <sharding-sphere.version>3.0.0</sharding-sphere.version>
+    <!--<spring.cloud.version>Finchley.RELEASE</spring.cloud.version>-->
+    <jetcache.version>2.5.9</jetcache.version>
+    <xxl-job-core.version>2.0.1</xxl-job-core.version>
+
+    <lettuce.version>5.1.0.RELEASE</lettuce.version>
+    <reactor.version>3.2.1.RELEASE</reactor.version>
+    <swagger2.version>2.8.0</swagger2.version>
+
+    <glassfish.el>3.0.0</glassfish.el>
+
+    <darwin-service-api.version>1.0.0.3.sibu</darwin-service-api.version>
+  </properties>
+
+  <dependencyManagement>
+    <dependencies>
+
+    </dependencies>
+  </dependencyManagement>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.testng</groupId>
+      <artifactId>testng</artifactId>
+      <version>${testng.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <!--<dependency> <groupId>org.slf4j</groupId> <artifactId>slf4j-api</artifactId>
+        </dependency> -->
+    <!--log related begin -->
+    <!--<dependency>-->
+    <!--<groupId>ch.qos.logback</groupId>-->
+    <!--<artifactId>logback-classic</artifactId>-->
+    <!--<scope>runtime</scope>-->
+    <!--</dependency>-->
+    <!--<dependency>-->
+    <!--<groupId>ch.qos.logback</groupId>-->
+    <!--<artifactId>logback-core</artifactId>-->
+    <!--<scope>runtime</scope>-->
+    <!--</dependency>-->
+    <dependency>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+    </dependency>
+    <!--<dependency>-->
+    <!--<groupId>org.slf4j</groupId>-->
+    <!--<artifactId>log4j-over-slf4j</artifactId>-->
+    <!--</dependency>-->
+    <dependency>
+      <groupId>joda-time</groupId>
+      <artifactId>joda-time</artifactId>
+    </dependency>
+  </dependencies>
+
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>${maven.compiler.plugin.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>${maven.surefire.plugin.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-jar-plugin</artifactId>
+          <version>${maven.jar.plugin.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-source-plugin</artifactId>
+          <version>${maven.source.plugin.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>${maven.resources.plugin.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-install-plugin</artifactId>
+          <version>${maven.install.plugin.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-deploy-plugin</artifactId>
+          <version>${maven.deploy.plugin.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-maven-plugin</artifactId>
+          <version>${spring-boot.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>com.spotify</groupId>
+          <artifactId>dockerfile-maven-plugin</artifactId>
+          <version>${dockerfile.maven.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>pl.project13.maven</groupId>
+          <artifactId>git-commit-id-plugin</artifactId>
+          <version>${git.commit.id.plugin.version}</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.8</source>
+          <target>1.8</target>
+          <meminitial>1024m</meminitial>
+          <maxmem>1024m</maxmem>
+          <encoding>UTF-8</encoding>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <argLine>-Xmx1024m -XX:PermSize=256m -XX:MaxPermSize=256m</argLine>
+          <includes>
+            <include>**/*Test.java</include>
+          </includes>
+          <argLine>-XX:-UseSplitVerifier</argLine>
+          <!-- 打包过程忽略Junit测试 -->
+          <skip>true</skip>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <configuration>
+          <encoding>UTF-8</encoding>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>versions-maven-plugin</artifactId>
+        <version>2.7</version>
+      </plugin>
+    </plugins>
+  </build>
+
+  <distributionManagement>
+    <repository>
+      <id>releases</id>
+      <name>Nexus Release Repository</name>
+      <url>http://47.97.160.249:8081/repository/maven-releases/</url>
+    </repository>
+    <snapshotRepository>
+      <id>snapshots</id>
+      <name>Nexus Snapshot Repository</name>
+      <url>http://47.97.160.249:8081/repository/maven-snapshots/</url>
+    </snapshotRepository>
+  </distributionManagement>
+
+  <!-- 不同的打包环境 -->
+  <profiles>
+
+    <!-- 开发环境，默认激活 -->
+    <profile>
+      <id>dev</id>
+      <activation>
+        <!-- 默认启用的是dev环境配置 -->
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <properties>
+        <devModel>dev</devModel>
+      </properties>
+    </profile>
+
+    <!-- 测试环境 -->
+    <profile>
+      <id>test</id>
+      <properties>
+        <devModel>test</devModel>
+      </properties>
+    </profile>
+
+    <!-- uat环境 -->
+    <profile>
+      <id>uat</id>
+
+      <properties>
+        <devModel>uat</devModel>
+      </properties>
+    </profile>
+
+    <!-- fat环境 -->
+    <profile>
+      <id>fat</id>
+
+      <properties>
+        <devModel>fat</devModel>
+      </properties>
+    </profile>
+
+    <!-- 生产环境 -->
+    <profile>
+      <id>product</id>
+      <properties>
+        <devModel>product</devModel>
+      </properties>
+    </profile>
+  </profiles>
+</project>

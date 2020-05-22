@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.discover.persistence.dao.mysql.DiscoverSubjectMapper">
+
+    <update id="updateSubjectStatusBatch" parameterType="java.util.List">
+        <foreach collection="param" item="item" index="index" open="" close="" separator=";">
+            update discover_subject
+            <set>
+                subject_status=#{item.subjectStatus},
+                update_time=#{item.updateTime},
+                publish_time=#{item.publishTime}
+            </set>
+            where subject_id = #{item.subjectId}
+        </foreach>
+    </update>
+
+    <insert id="insertSubject" useGeneratedKeys="true" keyProperty="subjectId"
+            parameterType="com.mall.discover.persistence.entity.mysql.DiscoverSubjectEntity">
+    insert into discover_subject (subject_name, subject_content,
+      subject_look, create_time,
+      create_user_id, update_time, publish_time, subject_status
+      )
+    values (#{subjectName,jdbcType=VARCHAR}, #{subjectContent,jdbcType=VARCHAR},
+      #{subjectLookString,jdbcType=VARCHAR}, #{createTime,jdbcType=BIGINT},
+      #{createUserId,jdbcType=BIGINT}, #{updateTime,jdbcType=BIGINT}
+      , #{publishTime,jdbcType=BIGINT}, #{subjectStatus,jdbcType=TINYINT})
+  </insert>
+
+    <update id="updateSubject" parameterType="com.mall.discover.persistence.entity.mysql.DiscoverSubjectEntity">
+        update discover_subject
+        <set>
+            <if test="subjectName != null and subjectName != ''">
+                subject_name = #{subjectName},
+            </if>
+            <if test="subjectContent != null and subjectContent != ''">
+                subject_content = #{subjectContent},
+            </if>
+            <if test="subjectLookString != null and subjectLookString != ''">
+                subject_look = #{subjectLookString},
+            </if>
+            <if test="updateTime > 0">
+                update_time = #{updateTime},
+            </if>
+            <if test="publishTime > 0">
+                publish_time = #{publishTime},
+            </if>
+            <if test="subjectStatus > 0">
+                subject_status = #{subjectStatus},
+            </if>
+        </set>
+        where subject_id = #{subjectId}
+    </update>
+
+    <insert id="insertSubjectCount" keyColumn="id"
+            parameterType="com.mall.discover.persistence.entity.mysql.DiscoverCountEntity">
+    insert into discover_count (
+        biztype, bizId, read_count, share_count, sort, sort_client, create_time, update_time)
+    values (
+        #{bizType},#{bizId},#{readCount},#{shareCount},#{sort},#{sortClient},#{createTime},#{updateTime}
+      )
+  </insert>
+
+    <update id="updateSubjectCount" parameterType="com.mall.discover.persistence.entity.mysql.DiscoverCountEntity">
+        update discover_count
+        <set>
+            <if test="readCount > 0">
+                read_count = #{readCount},
+            </if>
+            <if test="shareCount > 0">
+                share_count = #{shareCount},
+            </if>
+            <if test="sort > 0">
+                sort = #{sort},
+            </if>
+            <if test="sortClient > 0">
+                sort_client = #{sortClient},
+            </if>
+            <if test="updateTime > 0">
+                update_time = #{updateTime},
+            </if>
+        </set>
+        where biztype = #{bizType} and bizId = #{bizId}
+    </update>
+
+    <select id="querySubjectPageCount" resultType="java.lang.Integer">
+        SELECT
+        COUNT(ds.subject_id)
+        FROM
+        discover_subject AS ds
+        INNER JOIN discover_count AS dc ON ds.subject_id = dc.bizId
+        <where>
+            ds.is_deleted = 0
+            AND dc.is_deleted = 0
+            AND dc.biztype = #{param.bizType}
+            <if test="param.subjectName != null and param.subjectName != ''">
+                and ds.subject_name like CONCAT('%',#{param.subjectName},'%')
+            </if>
+        </where>
+    </select>
+
+    <select id="querySubjectPage" resultType="com.mall.discover.persistence.bo.SubjectBO">
+        SELECT
+        ds.subject_id, ds.subject_name, ds.subject_content, ds.subject_look, ds.create_time,ds.publish_time,ds.subject_status,
+        dc.sort, dc.read_count, dc.share_count
+        FROM
+        discover_subject AS ds
+        INNER JOIN discover_count AS dc ON ds.subject_id = dc.bizId
+        <where>
+            ds.is_deleted = 0
+            AND dc.is_deleted = 0
+            AND dc.biztype = #{param.bizType}
+            <if test="param.subjectName != null and param.subjectName != ''">
+                and subject_name like CONCAT('%',#{param.subjectName},'%')
+            </if>
+        </where>
+        order by dc.sort asc,ds.create_time desc
+        LIMIT #{startRecord},#{recordSize}
+    </select>
+
+    <select id="queryArticleCount" resultType="com.mall.discover.persistence.bo.SubjectBO">
+        SELECT
+        from_id as subjectId,
+        count( to_id ) AS articleCount
+        FROM
+        discover_relation
+        WHERE
+        is_deleted = 0
+        AND biztype = #{param.relation}
+        AND from_id IN
+        <foreach collection="list" item="item" close=")" open="(" separator=",">
+            #{item}
+        </foreach>
+        GROUP BY from_id
+    </select>
+
+    <select id="querySubjectInfo" resultType="com.mall.discover.persistence.bo.SubjectBO">
+        SELECT
+        ds.subject_id, ds.subject_name, ds.subject_content, ds.subject_look,ds.create_time,ds.publish_time,ds.subject_status,
+        dc.sort, dc.read_count,dc.share_count
+        FROM
+        discover_subject AS ds
+        INNER JOIN discover_count AS dc ON ds.subject_id = dc.bizId
+        <where>
+            ds.is_deleted = 0
+            AND dc.is_deleted = 0
+            AND dc.biztype = #{param.bizType}
+            AND subject_id = #{param.subjectId}
+        </where>
+        LIMIT 1
+    </select>
+
+    <update id="deleteSubject">
+    update discover_subject
+    set is_deleted = 1
+    where subject_id = #{param.subjectId}
+  </update>
+
+    <update id="deleteSubjectCount">
+    update discover_count
+    set is_deleted = 1
+    where bizId = #{param.subjectId}
+    and biztype = #{param.bizType}
+  </update>
+
+    <update id="deleteSubjectArticle">
+    update discover_relation
+    set is_deleted = 1
+    where from_id = #{param.subjectId}
+    and to_id = #{param.articleId}
+    and biztype = #{param.relation}
+  </update>
+
+    <select id="querySubjectByName" resultType="com.mall.discover.persistence.bo.SubjectBO">
+        SELECT
+        ds.subject_id, ds.subject_name,ds.publish_time,ds.subject_status
+        FROM
+        discover_subject AS ds
+        <where>
+            ds.is_deleted = 0
+            <if test="param.subjectName != null and param.subjectName != ''">
+                and subject_name like CONCAT('%',#{param.subjectName},'%')
+            </if>
+        </where>
+        LIMIT #{maxQueryNumber}
+    </select>
+
+
+    <select id="querySubjectArticlePage" resultType="com.mall.discover.persistence.bo.SubjectArticleBO">
+        SELECT
+        da.article_id,
+        da.article_title,
+        da.article_content,
+        da.article_status,
+        da.create_time,
+        da.article_look,
+        da.publish_time,
+        dc.read_count,
+        dc.share_count,
+        dr.sort,
+        dr.id as relateId
+        FROM
+        discover_relation AS dr
+        INNER JOIN discover_article AS da ON da.article_id = dr.to_id
+        INNER JOIN discover_count AS dc ON dc.bizId = da.article_id
+        WHERE
+        dr.is_deleted = 0
+        <if test="param.articleId != null">
+            and da.article_id =#{param.articleId}
+        </if>
+        AND da.is_deleted = 0
+        AND dc.is_deleted = 0
+        AND dr.is_deleted = 0
+        AND dr.biztype = #{param.relation}
+        AND dc.biztype = 1
+        AND dr.from_id = #{param.subjectId}
+        order by dr.sort is null, dr.sort asc,da.create_time desc
+        LIMIT #{startRecord},#{recordSize}
+    </select>
+
+    <select id="querySubjectArticlePageCount" resultType="java.lang.Integer">
+        SELECT
+        count(da.article_id)
+        FROM
+        discover_relation AS dr
+        INNER JOIN discover_article AS da ON da.article_id = dr.to_id
+        INNER JOIN discover_count AS dc ON dc.bizId = da.article_id
+        WHERE
+        dr.is_deleted = 0
+        <if test="param.articleId != null">
+            and da.article_id =#{param.articleId}
+        </if>
+        AND da.is_deleted = 0
+        AND dc.is_deleted = 0
+        AND dr.is_deleted = 0
+        AND dr.biztype = #{param.relation}
+        AND dc.biztype = 1
+        AND dr.from_id = #{param.subjectId}
+    </select>
+
+    <select id="queryWaitPublishSubjectId" resultType="java.lang.Long">
+        SELECT
+        subject_id
+        FROM
+        discover_subject
+        WHERE
+        is_deleted = 0
+        AND publish_time &lt;= #{currentTime}
+        AND subject_status = #{subjectStatus}
+     </select>
+
+    <update id="updateWaitPublishSubStatus">
+        update discover_subject
+        set
+            update_time = #{currentTime},
+            subject_status = #{subjectStatus}
+        where subject_id in
+        <foreach collection="list" item="item" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </update>
+</mapper>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mall.discover.persistence.dao.mysql.CountMapper">
+
+    <update id="editArticleNums" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" open="" close="" separator=";">
+            update discover_count
+            <if test="item.readCount != null">
+                <set>
+                    read_count=${item.readCount}
+                </set>
+            </if>
+            <if test="item.shareCount != null">
+                <set>
+                    share_count=${item.shareCount}
+                </set>
+            </if>
+            <if test="item.sortClient != null">
+                <set>
+                    sort_client=${item.sortClient}
+                </set>
+            </if>
+            where id = ${item.id}
+        </foreach>
+    </update>
+
+    <update id="editDiscoverCountSortClient" parameterType="java.util.List">
+        update discover_count
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="sort_client = case" suffix="end,">
+                <foreach collection="param" item="i" index="index">
+                    when id=#{i.id} then #{i.sortClient}
+                </foreach>
+            </trim>
+        </trim>
+        where
+        <foreach collection="param" separator="or" item="i" index="index">
+            id=#{i.id}
+        </foreach>
+        <!--        <foreach collection="param" item="item" index="index" separator=";">-->
+        <!--            update discover_count set sort_client=#{item.sortClient} where id = #{item.id}-->
+        <!--        </foreach>-->
+    </update>
+
+    <update id="batchUpate" parameterType="java.util.List">
+        <foreach collection="param" item="item" index="index" open="" close="" separator=";">
+            update discover_count
+            <set>
+                share_count=#{item.shareCount},
+                read_count=#{item.readCount}
+            </set>
+            where id = #{item.id}
+        </foreach>
+    </update>
+</mapper>
