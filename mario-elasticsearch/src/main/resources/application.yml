@@ -1,0 +1,11 @@
+server:
+  port: 80
+
+es:
+  ip: 192.168.1.9
+  port: 9300
+  #连接池
+  pool: 5
+  #集群名字
+  cluster:
+    name: my-application
