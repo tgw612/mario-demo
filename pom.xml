@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://maven.apache.org/POM/4.0.0"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
@@ -17,49 +17,33 @@
     <module>mario-common</module>
     <module>mario-task</module>
     <module>mario-persistence</module>
+    <module>mario-elasticsearch</module>
     <module>mario-service</module>
     <module>mario-service-api</module>
-    <module>mario-mq</module>
+    <!--    <module>mario-mq</module>-->
     <module>mario-web</module>
     <module>mario-admin-web</module>
   </modules>
 
   <properties>
-    <!-- 公共包 -->
-    <sibu-mall-common.version>1.0.0.72.sibu</sibu-mall-common.version>
-    <!--商品服务-->
-    <sibu-mall-product-service-api.version>1.0.0.6.sibu</sibu-mall-product-service-api.version>
-    <!--佣金服务-->
-    <sibu-mall-commission-service-api.version>1.0.0.23.sibu
-    </sibu-mall-commission-service-api.version>
-    <!--用户服务-->
-    <sibu-mall-user.version>1.0.1.56.sibu</sibu-mall-user.version>
-    <!-- token验证版本号 -->
-    <sibu-mall-token-configure.version>1.0.0.4.sibu</sibu-mall-token-configure.version>
-    <sibu-mall-token-service-api.version>1.0.0.4.sibu</sibu-mall-token-service-api.version>
-    <!-- ElasticSearch微服务 -->
-    <sibu-mall-elasticsearch-service-api.version>1.0.1.20.sibu
-    </sibu-mall-elasticsearch-service-api.version>
-
-
+    <xxl-job.version>2.2.0</xxl-job.version>
     <spring.version>5.1.3.RELEASE</spring.version>
+    <project.version>.1.0.1-SNAPSHOT</project.version>
     <spring-boot.version>2.1.1.RELEASE</spring-boot.version>
     <doubo-parent.version>2.0.20M63</doubo-parent.version>
-    <dubbo.version>2.7.1</dubbo.version>
+    <dubbo.version>2.7.6</dubbo.version>
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <java.version>1.8</java.version>
 
-    <spring.boot.main.class>com.mall.discover.Application</spring.boot.main.class>
-    <spring.boot.web.main.class>com.mall.discover.web.WebApplication</spring.boot.web.main.class>
+    <spring.boot.main.class>Application</spring.boot.main.class>
+    <spring.boot.web.main.class>WebApplication</spring.boot.web.main.class>
 
     <docker.repostory>docker.mall.vip</docker.repostory>
     <docker.image.prefix>sibu-mall</docker.image.prefix>
-
     <!-- 官方文档：https://github.com/alibaba/druid/wiki/%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98 -->
     <druid.version>1.1.10</druid.version>
-
     <mybatis-spring-boot-starter.version>1.3.2</mybatis-spring-boot-starter.version>
     <com.baomidou.mybatis-plus-boot-starter.version>2.3.2
     </com.baomidou.mybatis-plus-boot-starter.version>
@@ -125,7 +109,6 @@
     <sharding-sphere.version>3.0.0</sharding-sphere.version>
     <!--<spring.cloud.version>Finchley.RELEASE</spring.cloud.version>-->
     <jetcache.version>2.5.9</jetcache.version>
-    <xxl-job-core.version>2.0.1</xxl-job-core.version>
 
     <lettuce.version>5.1.0.RELEASE</lettuce.version>
     <reactor.version>3.2.1.RELEASE</reactor.version>
@@ -133,144 +116,177 @@
 
     <glassfish.el>3.0.0</glassfish.el>
 
-    <darwin-service-api.version>1.0.0.3.sibu</darwin-service-api.version>
   </properties>
 
   <dependencyManagement>
     <dependencies>
-
+      <dependency>
+        <artifactId>dubbo-spring-boot-starter</artifactId>
+        <groupId>org.apache.dubbo</groupId>
+        <version>${dubbo.version}</version>
+      </dependency>
+      <dependency>
+        <artifactId>dubbo</artifactId>
+        <groupId>org.apache.dubbo</groupId>
+        <version>${dubbo.version}</version>
+      </dependency>
+      <dependency>
+        <artifactId>dubbo-dependencies-zookeeper</artifactId>
+        <groupId>org.apache.dubbo</groupId>
+        <version>${dubbo.version}</version>
+        <type>pom</type>
+      </dependency>
+      <dependency>
+        <artifactId>mybatis-plus-boot-starter</artifactId>
+        <groupId>com.baomidou</groupId>
+        <version>3.3.2</version>
+      </dependency>
+      <dependency>
+        <artifactId>xxl-job-core</artifactId>
+        <groupId>com.xuxueli</groupId>
+        <version>${xxl-job.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.mario</groupId>
+        <artifactId>mario-common</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.mario</groupId>
+        <artifactId>mario-web</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.mario</groupId>
+        <artifactId>mario-persistence</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.mario</groupId>
+        <artifactId>mario-admin-web</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <!--      <dependency>-->
+      <!--        <groupId>com.mario</groupId>-->
+      <!--        <artifactId>mario-mq</artifactId>-->
+      <!--        <version>${project.version}</version>-->
+      <!--      </dependency>-->
+      <dependency>
+        <groupId>com.mario</groupId>
+        <artifactId>mario-task</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.mario</groupId>
+        <artifactId>mario-elasticsearch</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.mario</groupId>
+        <artifactId>mario-service</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.mario</groupId>
+        <artifactId>mario-service-api</artifactId>
+        <version>${project.version}</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
-
-  <dependencies>
-    <dependency>
-      <groupId>org.testng</groupId>
-      <artifactId>testng</artifactId>
-      <version>${testng.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <!--<dependency> <groupId>org.slf4j</groupId> <artifactId>slf4j-api</artifactId>
-        </dependency> -->
-    <!--log related begin -->
-    <!--<dependency>-->
-    <!--<groupId>ch.qos.logback</groupId>-->
-    <!--<artifactId>logback-classic</artifactId>-->
-    <!--<scope>runtime</scope>-->
-    <!--</dependency>-->
-    <!--<dependency>-->
-    <!--<groupId>ch.qos.logback</groupId>-->
-    <!--<artifactId>logback-core</artifactId>-->
-    <!--<scope>runtime</scope>-->
-    <!--</dependency>-->
-    <dependency>
-      <groupId>commons-logging</groupId>
-      <artifactId>commons-logging</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-lang3</artifactId>
-    </dependency>
-    <!--<dependency>-->
-    <!--<groupId>org.slf4j</groupId>-->
-    <!--<artifactId>log4j-over-slf4j</artifactId>-->
-    <!--</dependency>-->
-    <dependency>
-      <groupId>joda-time</groupId>
-      <artifactId>joda-time</artifactId>
-    </dependency>
-  </dependencies>
-
 
   <build>
     <pluginManagement>
       <plugins>
         <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
+          <groupId>org.apache.maven.plugins</groupId>
           <version>${maven.compiler.plugin.version}</version>
         </plugin>
         <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
+          <groupId>org.apache.maven.plugins</groupId>
           <version>${maven.surefire.plugin.version}</version>
         </plugin>
         <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-jar-plugin</artifactId>
+          <groupId>org.apache.maven.plugins</groupId>
           <version>${maven.jar.plugin.version}</version>
         </plugin>
         <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-source-plugin</artifactId>
+          <groupId>org.apache.maven.plugins</groupId>
           <version>${maven.source.plugin.version}</version>
         </plugin>
         <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-resources-plugin</artifactId>
+          <groupId>org.apache.maven.plugins</groupId>
           <version>${maven.resources.plugin.version}</version>
         </plugin>
         <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-install-plugin</artifactId>
+          <groupId>org.apache.maven.plugins</groupId>
           <version>${maven.install.plugin.version}</version>
         </plugin>
         <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-deploy-plugin</artifactId>
+          <groupId>org.apache.maven.plugins</groupId>
           <version>${maven.deploy.plugin.version}</version>
         </plugin>
         <plugin>
-          <groupId>org.springframework.boot</groupId>
           <artifactId>spring-boot-maven-plugin</artifactId>
+          <groupId>org.springframework.boot</groupId>
           <version>${spring-boot.version}</version>
         </plugin>
         <plugin>
-          <groupId>com.spotify</groupId>
           <artifactId>dockerfile-maven-plugin</artifactId>
+          <groupId>com.spotify</groupId>
           <version>${dockerfile.maven.version}</version>
         </plugin>
         <plugin>
-          <groupId>pl.project13.maven</groupId>
           <artifactId>git-commit-id-plugin</artifactId>
+          <groupId>pl.project13.maven</groupId>
           <version>${git.commit.id.plugin.version}</version>
         </plugin>
       </plugins>
     </pluginManagement>
     <plugins>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
+          <encoding>UTF-8</encoding>
+          <maxmem>1024m</maxmem>
+          <meminitial>1024m</meminitial>
           <source>1.8</source>
           <target>1.8</target>
-          <meminitial>1024m</meminitial>
-          <maxmem>1024m</maxmem>
-          <encoding>UTF-8</encoding>
         </configuration>
+        <groupId>org.apache.maven.plugins</groupId>
+        <version>${maven.compiler.plugin.version}</version>
       </plugin>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
           <argLine>-Xmx1024m -XX:PermSize=256m -XX:MaxPermSize=256m</argLine>
+          <argLine>-XX:-UseSplitVerifier</argLine>
           <includes>
             <include>**/*Test.java</include>
           </includes>
-          <argLine>-XX:-UseSplitVerifier</argLine>
           <!-- 打包过程忽略Junit测试 -->
           <skip>true</skip>
         </configuration>
+        <groupId>org.apache.maven.plugins</groupId>
+        <version>${maven.surefire.plugin.version}</version>
       </plugin>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-resources-plugin</artifactId>
         <configuration>
           <encoding>UTF-8</encoding>
         </configuration>
+        <groupId>org.apache.maven.plugins</groupId>
+        <version>${maven.resources.plugin.version}</version>
       </plugin>
       <plugin>
-        <groupId>org.codehaus.mojo</groupId>
         <artifactId>versions-maven-plugin</artifactId>
+        <groupId>org.codehaus.mojo</groupId>
         <version>2.7</version>
       </plugin>
     </plugins>
@@ -278,64 +294,15 @@
 
   <distributionManagement>
     <repository>
-      <id>releases</id>
-      <name>Nexus Release Repository</name>
-      <url>http://47.97.160.249:8081/repository/maven-releases/</url>
+      <id>maven-releases</id>
+      <name>user release resp</name>
+      <url>http://127.0.0.1:8081/repository/maven-releases/</url>
     </repository>
     <snapshotRepository>
-      <id>snapshots</id>
-      <name>Nexus Snapshot Repository</name>
-      <url>http://47.97.160.249:8081/repository/maven-snapshots/</url>
+      <id>maven-snapshots</id>
+      <name>user snapshots resp</name>
+      <url>http://127.0.0.1:8081/repository/maven-snapshots/</url>
     </snapshotRepository>
   </distributionManagement>
 
-  <!-- 不同的打包环境 -->
-  <profiles>
-
-    <!-- 开发环境，默认激活 -->
-    <profile>
-      <id>dev</id>
-      <activation>
-        <!-- 默认启用的是dev环境配置 -->
-        <activeByDefault>true</activeByDefault>
-      </activation>
-      <properties>
-        <devModel>dev</devModel>
-      </properties>
-    </profile>
-
-    <!-- 测试环境 -->
-    <profile>
-      <id>test</id>
-      <properties>
-        <devModel>test</devModel>
-      </properties>
-    </profile>
-
-    <!-- uat环境 -->
-    <profile>
-      <id>uat</id>
-
-      <properties>
-        <devModel>uat</devModel>
-      </properties>
-    </profile>
-
-    <!-- fat环境 -->
-    <profile>
-      <id>fat</id>
-
-      <properties>
-        <devModel>fat</devModel>
-      </properties>
-    </profile>
-
-    <!-- 生产环境 -->
-    <profile>
-      <id>product</id>
-      <properties>
-        <devModel>product</devModel>
-      </properties>
-    </profile>
-  </profiles>
 </project>
